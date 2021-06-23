@@ -4,11 +4,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
 
+const dogsRoute = require("./routes/dogs");
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+
+app.use("/api/dogs", dogsRoute);
 
 const PORT = process.env.PORT || 5000;
 

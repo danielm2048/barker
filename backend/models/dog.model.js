@@ -14,15 +14,17 @@ const dogsSchema = new mongoose.Schema(
 			type: Number,
 			required: true,
 		},
-		picture: {
-			type: String,
-			required: true,
-		},
+		pictures: [
+			{
+				type: String,
+				required: true,
+			},
+		],
 		info: {
 			type: String,
 			required: true,
 		},
-		location: {
+		locationId: {
 			type: String,
 			required: true,
 		},
@@ -31,7 +33,9 @@ const dogsSchema = new mongoose.Schema(
 			required: true,
 		},
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+	}
 );
 
 module.exports = mongoose.model("Dogs", dogsSchema);
