@@ -1,12 +1,20 @@
+import React from "react";
 import "./App.css";
-import barkerLogo from "./images/BarkerLogo.png";
+
+import Navbar from "./components/layout/Navbar";
+import Routes from "./Routes";
+import Footer from "./components/layout/Footer";
 
 function App() {
-	return <div className="App">
-		<div className="App-header">
-			<img src={barkerLogo} alt="baker logo" style={{width: 500}} />
-		</div>
-	</div>;
+	return (
+		<>
+			<Navbar />
+			<div className="App">
+				<Routes />
+			</div>
+			<Footer />
+		</>
+	);
 }
 
 export default App;
