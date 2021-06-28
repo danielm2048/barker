@@ -7,14 +7,13 @@ const City = require("../models/city.model");
 router.get("/", async (req, res) => {
 	const { location, ageMin, ageMax, breed } = req.query;
 
-	
 	const city = await City.findOne({ name: location });
-	
+
 	const lat = city.location.coordinates[0];
 	const long = city.location.coordinates[1];
 	const distanceInKm = 20;
 	const radius = distanceInKm / 6378.1;
-	
+
 	const nearCities = await City.find({
 		location: { $geoWithin: { $centerSphere: [[lat, long], radius] } },
 	});
@@ -27,15 +26,19 @@ router.get("/", async (req, res) => {
 		},
 	});
 
-	console.log(dogs);
-
-	const result = await Promise.all(dogs.map(async dog => {
-		const cityOfDog = await City.findById(dog.locationId);
-		return {
-			name: dog.name,
-			city: cityOfDog.name
-		}
-	}))
+	const result = await Promise.all(
+		dogs.map(async (dog) => {
+			const cityOfDog = await City.findById(dog.locationId);
+			return {
+				name: dog.name,
+				age: dog.age,
+				breed: dog.breed,
+				pics: dog.pictures,
+				info: dog.info,
+				city: cityOfDog.name,
+			};
+		})
+	);
 
 	res.json(result);
 });
