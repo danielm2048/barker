@@ -1,6 +1,7 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { StyledNavLink } from "./StyledNavbar";
 import { Heart, User } from "@styled-icons/feather";
+import { Spinner3 } from "@styled-icons/evil";
 
 export const UserIcon = styled(User)`
 	transition: fill 0.1s;
@@ -14,4 +15,18 @@ export const HeartIcon = styled(Heart)`
 	${StyledNavLink}:hover & {
 		fill: red;
 	}
+`;
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+export const SpinnerIcon = styled(Spinner3)`
+	vertical-align: middle;
+	animation: ${rotate} 1s linear infinite;
 `;

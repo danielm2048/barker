@@ -1,14 +1,14 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnimation, useMotionValue } from "framer-motion";
 
-import { ClickContext } from "../context";
+import { useChoiceStore } from "../store";
 
 import { CardFrame } from "../styles/StyledFrame";
 
 const Card = ({ children, onVote, isTop, ...props }) => {
 	const cardRef = useRef(null);
 
-	const { isClicked, setIsClicked } = useContext(ClickContext);
+	const choice = useChoiceStore();
 
 	const x = useMotionValue(0);
 	const controls = useAnimation();
@@ -71,11 +71,11 @@ const Card = ({ children, onVote, isTop, ...props }) => {
 	});
 
 	useEffect(() => {
-		if (isClicked.clicked && isTop) {
-			flyAway(200, isClicked.direction, 300);
-			setIsClicked({ clicked: false, direction: null });
+		if (choice.isClicked && isTop) {
+			flyAway(200, choice.direction, 300);
+			choice.setIsClicked(false, "");
 		}
-	}, [isTop, isClicked, setIsClicked, flyAway]);
+	}, [isTop, choice, flyAway]);
 
 	return (
 		<CardFrame

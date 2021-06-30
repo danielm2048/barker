@@ -1,7 +1,11 @@
+body {
+	font-family: "Montserrat", sans-serif;
+}
+
 .App {
 	background: #f4f4f4;
 	text-align: center;
-	height: 100vh;
+	/* height: 100vh; */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -18,7 +22,7 @@
 	position: absolute;
 	width: 6px;
 	height: 6px;
-	background: #fff;
+	background: #fdd;
 	border-radius: 50%;
 	animation: lds-default 1.2s linear infinite;
 }

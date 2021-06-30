@@ -10,11 +10,13 @@ export const StackFrame = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	position: relative;
+	position: absolute;
+	top: 0;
 `;
 
 export const CardFrame = styled(motion.div)`
 	position: absolute;
+	z-index: 2;
 	cursor: grab;
 
 	&:active {
@@ -27,7 +29,7 @@ export const CardInfo = styled.div`
 	flex-direction: column;
 	width: 90%;
 	text-align: left;
-	margin-top: 85%;
+	margin-top: 100%;
 
 	h1 {
 		font-size: 26px;
@@ -60,6 +62,7 @@ export const CardInfo = styled.div`
 		overflow: hidden;
 		-webkit-line-clamp: 4;
 		-webkit-box-orient: vertical;
+		margin: 5px 0;
 	}
 `;
 
@@ -73,8 +76,8 @@ export const Item = styled.div`
 	background-size: 95% 65%;
 	background-repeat: no-repeat;
 	background-position: center 10px;
-	width: 325px;
-	height: 550px;
+	width: 275px;
+	height: 480px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

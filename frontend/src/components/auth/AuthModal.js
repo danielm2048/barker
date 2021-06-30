@@ -11,9 +11,9 @@ import { UserIcon } from "../../styles/StyledIcons";
 import { NavItem, StyledNavLink } from "../../styles/StyledNavbar";
 import logo from "../../images/BarkerLogo.png";
 import { X } from "@styled-icons/feather";
-// import Login from "./Login";
-// import Register from "./Register";
-// import ForgotPassword from "./ForgotPassword";
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
+import ForgotPassword from "./ForgotPassword";
 
 const AuthModal = () => {
 	const [modal, setModal] = useState(false);
@@ -71,14 +71,14 @@ const AuthModal = () => {
 								: "Have an account? Click here to login"}
 						</TextButton>
 					)}
-					{/* 
+
 					{forgot ? (
-						<ForgotPassword toggleToast={toggleToast} setModal={setModal} />
+						<ForgotPassword setModal={setModal} />
 					) : alreadyUser ? (
-						<Login toggleToast={toggleToast} />
+						<LoginForm />
 					) : (
-						<Register toggleToast={toggleToast} />
-					)} */}
+						<SignupForm />
+					)}
 
 					{!forgot && (
 						<TextButton onClick={() => setForgot(true)}>

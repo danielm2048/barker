@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-// import { HeartIcon } from "../../styles/StyledIcons";
+import useAuth from "../../hooks/useAuth";
+import { HeartIcon } from "../../styles/StyledIcons";
 import {
 	NavLeft,
 	NavRight,
@@ -14,29 +15,30 @@ import AuthModal from "../auth/AuthModal";
 // import Logout from "../auth/Logout";
 
 const NavBar = () => {
+	const auth = useAuth();
 	const [scroll, setScroll] = useState(false);
 	const [burgerMenuOpen, setBurgerMenuOpen] = useState(false);
 
 	const history = useHistory();
 
-	// const authLinks = (
-	// 	<>
-	// 		{/* <Logout /> */}
-	// 		<NavItem right>
-	// 			<StyledNavLink to="/wishlist" $icon>
-	// 				<HeartIcon size="24" title="My Wishlist" />
-	// 			</StyledNavLink>
-	// 		</NavItem>
-	// 	</>
-	// );
+	const authLinks = (
+		<>
+			{/* <Logout /> */}
+			<NavItem right>
+				<StyledNavLink to="/wishlist" $icon>
+					<HeartIcon size="24" title="My Wishlist" />
+				</StyledNavLink>
+			</NavItem>
+		</>
+	);
 
-	// const adminLinks = (
-	// 	<>
-	// 		<NavItem right>
-	// 			<StyledNavLink to="/admin-section">Admin Section</StyledNavLink>
-	// 		</NavItem>
-	// 	</>
-	// );
+	const adminLinks = (
+		<>
+			<NavItem right>
+				<StyledNavLink to="/admin-section">Admin Section</StyledNavLink>
+			</NavItem>
+		</>
+	);
 
 	const guestLinks = <AuthModal />;
 
@@ -77,20 +79,23 @@ const NavBar = () => {
 					</NavItem>
 				</NavLeft>
 				<NavRight burgerMenuOpen={burgerMenuOpen}>
-					{/* {data && data.getUser && !loading
-					? data.getUser.admin
-						? adminLinks
-						: null
-					: null}
-				{data && data.getUser && !loading ? authLinks : guestLinks} */}
+					{auth.data && !auth.loading
+						? auth.data.admin
+							? adminLinks
+							: null
+						: null}
 					<NavItem>
 						<StyledNavLink to="/swoofer">Swoofer</StyledNavLink>
 					</NavItem>
 					<NavItem>
 						<StyledNavLink to="/about">About</StyledNavLink>
 					</NavItem>
-					{guestLinks}
-					<BurgerMenu onClick={() => setBurgerMenuOpen(!burgerMenuOpen)} />
+					{auth.data && !auth.loading ? authLinks : guestLinks}
+					<BurgerMenu
+						size="24"
+						title="Menu"
+						onClick={() => setBurgerMenuOpen(!burgerMenuOpen)}
+					/>
 				</NavRight>
 			</div>
 		</NavContainer>

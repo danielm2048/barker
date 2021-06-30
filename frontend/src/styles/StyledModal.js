@@ -12,7 +12,6 @@ export const Modal = styled.div`
 	background-color: rgb(0, 0, 0);
 	background-color: rgba(0, 0, 0, 0.4);
 	padding-top: 60px;
-	font-family: "Gotu", sans-serif;
 `;
 
 const animatezoom = keyframes`
@@ -65,7 +64,7 @@ export const ModalActions = styled.div`
 `;
 
 export const ModalButton = styled.button`
-	background-color: #d13c3a;
+	background-color: #eed3cc;
 	color: white;
 	padding: 14px 20px;
 	margin: 8px 0;
@@ -81,7 +80,7 @@ export const ModalButton = styled.button`
 
 export const ModalInput = styled.input`
 	width: 100%;
-	padding: 12px 20px;
+	padding: 12px 4px;
 	margin: 8px 0;
 	display: inline-block;
 	border: 1px solid #ccc;

@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-import { ClickContext } from "../context";
+import usePets from "../hooks/usePets";
+import { useChoiceStore } from "../store";
 
 import Loader from "../components/Loader";
 
@@ -9,76 +7,50 @@ import Button from "../styles/StyledButton";
 import { Wrapper, Item, CardInfo } from "../styles/StyledFrame";
 
 const Swoofer = () => {
-	const [pets, setPets] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [isClicked, setIsClicked] = useState({
-		clicked: false,
-		direction: null,
-	});
+	const { isLoading, isError, error, data } = usePets("KEFAR SAVA");
 
-	useEffect(() => {
-		const fetchPets = async () => {
-			setLoading(true);
+	const setIsClicked = useChoiceStore((state) => state.setIsClicked);
 
-			try {
-				const { data } = await axios.get("/api/dogs/?location=ROSH HAAYIN");
+	if (isLoading || !data) {
+		return <Loader />;
+	}
 
-				setPets(data);
-			} catch (err) {
-				console.error(err);
-				alert(
-					"Sorry, we couldn't generate a question right now.. Please try again later"
-				);
-			}
-
-			setLoading(false);
-		};
-		fetchPets();
-	}, []);
+	if (isError) {
+		console.error(error);
+	}
 
 	return (
 		<>
-			<ClickContext.Provider value={{ isClicked, setIsClicked }}>
-				{loading || !pets.length ? (
-					<Loader />
-				) : (
-					<Wrapper onVote={(item, vote) => console.log(item.props, vote)}>
-						{pets.map((pet, i) => (
-							<Item key={i} whileTap={{ scale: 1.15 }} pic={pet.pics[0]}>
-								{/* <CardImg src={pet.pics[0]} alt="the pet" /> */}
-								<CardInfo>
-									<div style={{ display: "flex", alignItems: "baseline" }}>
-										<h1>{pet.name}, </h1>
-										<h2>{pet.age}</h2>
-										<h3>{pet.breed}</h3>
-									</div>
-									<span>{pet.city.toLowerCase()}</span>
-									<p>{pet.info}</p>
-								</CardInfo>
-							</Item>
-						))}
-					</Wrapper>
-				)}
-			</ClickContext.Provider>
+			<Wrapper onVote={(item, vote) => console.log(item.props, vote)}>
+				{data.map((pet, i) => (
+					<Item key={i} whileTap={{ scale: 1.15 }} pic={pet.pics[0]}>
+						<CardInfo>
+							<div style={{ display: "flex", alignItems: "baseline" }}>
+								<h1>{pet.name}, </h1>
+								<h2>{pet.age}</h2>
+								<h3>{pet.breed}</h3>
+							</div>
+							<span>{pet.city.toLowerCase()}</span>
+							<p>{pet.info}</p>
+						</CardInfo>
+					</Item>
+				))}
+			</Wrapper>
 
 			<div
 				style={{
-					height: 150,
-					width: 200,
+					position: "absolute",
+					top: "50%",
+					width: "100%",
 					display: "flex",
-					justifyContent: "space-between",
+					justifyContent: "space-around",
+					zIndex: 1,
 				}}
 			>
-				<Button
-					circle
-					onClick={() => setIsClicked({ clicked: true, direction: "left" })}
-				>
+				<Button circle onClick={() => setIsClicked(true, "left")}>
 					🤔
 				</Button>
-				<Button
-					circle
-					onClick={() => setIsClicked({ clicked: true, direction: "right" })}
-				>
+				<Button circle onClick={() => setIsClicked(true, "right")}>
 					😍
 				</Button>
 			</div>

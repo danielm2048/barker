@@ -6,21 +6,36 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		phone: {
-			type: String,
-			required: true,
-		},
 		email: {
 			type: String,
 			required: true,
 		},
-		type: {
+		password: {
 			type: String,
 			required: true,
+		},
+		isOrganisation: {
+			type: Boolean,
+			required: true,
+		},
+		phone: {
+			type: String,
+		},
+		pic: {
+			type: String,
+			default: "https://barker.s3.eu-central-1.amazonaws.com/profile.png",
 		},
 		locationId: {
 			type: String,
 			required: true,
+		},
+		admin: {
+			type: Boolean,
+			required: true,
+		},
+		tokenVersion: {
+			type: Number,
+			default: 0,
 		},
 	},
 	{

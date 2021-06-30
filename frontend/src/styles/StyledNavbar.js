@@ -47,7 +47,6 @@ export const NavLeft = styled.ul`
 `;
 
 export const NavItem = styled.li`
-	padding: 25px 0;
 	@media screen and (max-width: 768px) {
 		margin: 0 auto;
 	}
