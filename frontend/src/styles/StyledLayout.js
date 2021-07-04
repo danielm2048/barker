@@ -50,6 +50,6 @@ export const HomeLink = styled(Link)`
 	border-radius: 10px;
 	border: 2px black solid;
 	font-size: 18px;
-	padding: 5px;
+	padding: 8px;
 	text-decoration: none;
 `;

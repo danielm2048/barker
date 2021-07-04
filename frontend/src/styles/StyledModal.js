@@ -7,7 +7,7 @@ export const Modal = styled.div`
 	left: 0;
 	top: 0;
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 	overflow: auto;
 	background-color: rgb(0, 0, 0);
 	background-color: rgba(0, 0, 0, 0.4);
@@ -75,6 +75,7 @@ export const ModalButton = styled.button`
 	font-size: 16px;
 	&:hover {
 		opacity: 0.8;
+		background-color: #fd987f;
 	}
 `;
 
@@ -103,10 +104,10 @@ const errorAnimate = keyframes`
 
 export const ModalError = styled.div`
 	width: 100%;
-	padding: 16px 20px;
+	padding: 16px 0;
 	margin: 12px 0;
 	display: inline-block;
-	/* text-align: center; */
+	text-align: center;
 	background-color: #f44336;
 	color: white;
 	animation: ${errorAnimate} 1s;

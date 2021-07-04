@@ -10,3 +10,9 @@ export const useTokenStore = create((set) => ({
 	accessToken: "",
 	setAccessToken: (accessToken) => set({ accessToken }),
 }));
+
+export const useModalStore = create((set) => ({
+	isOpen: "",
+	open: () => set({ isOpen: true }),
+	close: () => set({ isOpen: false }),
+}));

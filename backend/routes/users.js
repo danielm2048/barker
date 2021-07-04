@@ -1,7 +1,16 @@
+require("dotenv").config();
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const AWS = require("aws-sdk");
+const { nanoid } = require("nanoid");
+
+const s3 = new AWS.S3({
+	accessKeyId: process.env.AWS_ACCESS_KEY,
+	secretAccessKey: process.env.AWS_SECRET_KEY,
+});
+
 const authorizeUser = require("../middleware/authMiddleware");
 
 const User = require("../models/user.model");
@@ -13,9 +22,14 @@ const {
 	sendRefreshToken,
 } = require("../utils/auth");
 
+router.use(fileUpload());
+
 router.post("/signup", async (req, res) => {
-	const { email, userName, password, isOrganisation, location, pic, phone } =
+	const { email, userName, password, isOrganisation, location, phone } =
 		req.body;
+
+	const { pic } = req.files;
+
 	if (
 		!email ||
 		!userName ||
@@ -41,24 +55,42 @@ router.post("/signup", async (req, res) => {
 		res.status(500).send(err)
 	);
 
-	const newUser = new User({
-		name: userName,
-		email,
-		password: hashedPassword,
-		isOrganisation,
-		locationId: city._id,
-		phone,
-		pic,
-		admin: false,
+	const picId = nanoid();
+
+	const s3Params = {
+		Bucket: "barker",
+		Key: picId,
+		Body: pic,
+	};
+
+	const url = `https://barker.s3.eu-central-1.amazonaws.com/${picId}`;
+
+	s3.upload(s3Params, (err, data) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json("Couldn't upload pictures...");
+		}
+		console.log(`File uploaded successfully. ${data.Location}`);
+
+		const newUser = new User({
+			name: userName,
+			email,
+			password: hashedPassword,
+			isOrganisation,
+			locationId: city._id,
+			phone,
+			pic: url,
+			admin: false,
+		});
+
+		await newUser.save().catch((err) => res.status(500).send(err));
+
+		const accessToken = createAccessToken(newUser);
+		const refreshToken = createRefreshToken(newUser);
+		sendRefreshToken(res, refreshToken);
+
+		res.json({ user: newUser, accessToken });
 	});
-
-	await newUser.save().catch((err) => res.status(500).send(err));
-
-	const accessToken = createAccessToken(newUser);
-	const refreshToken = createRefreshToken(newUser);
-	sendRefreshToken(res, refreshToken);
-
-	res.json({ user: newUser, accessToken });
 });
 
 router.post("/login", async (req, res) => {

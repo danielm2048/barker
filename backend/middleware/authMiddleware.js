@@ -5,7 +5,7 @@ const authorizeUser = (req, res, next) => {
 	const { authorization } = req.headers;
 	const token = authorization.replace("bearer ", "");
 
-	if (!token || token === "bearer") {
+	if (!token) {
 		return res.status(403).json("Token is required");
 	}
 

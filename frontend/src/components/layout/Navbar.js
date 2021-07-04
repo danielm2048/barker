@@ -12,7 +12,7 @@ import {
 } from "../../styles/StyledNavbar";
 import logo from "../../images/BarkerLogo.png";
 import AuthModal from "../auth/AuthModal";
-// import Logout from "../auth/Logout";
+import Logout from "../auth/Logout";
 
 const NavBar = () => {
 	const auth = useAuth();
@@ -23,18 +23,21 @@ const NavBar = () => {
 
 	const authLinks = (
 		<>
-			{/* <Logout /> */}
-			<NavItem right>
+			<NavItem>
+				<StyledNavLink to="/swoofer">Swoofer</StyledNavLink>
+			</NavItem>
+			<NavItem>
 				<StyledNavLink to="/wishlist" $icon>
 					<HeartIcon size="24" title="My Wishlist" />
 				</StyledNavLink>
 			</NavItem>
+			<Logout />
 		</>
 	);
 
 	const adminLinks = (
 		<>
-			<NavItem right>
+			<NavItem>
 				<StyledNavLink to="/admin-section">Admin Section</StyledNavLink>
 			</NavItem>
 		</>
@@ -79,18 +82,11 @@ const NavBar = () => {
 					</NavItem>
 				</NavLeft>
 				<NavRight burgerMenuOpen={burgerMenuOpen}>
-					{auth.data && !auth.loading
-						? auth.data.admin
-							? adminLinks
-							: null
-						: null}
-					<NavItem>
-						<StyledNavLink to="/swoofer">Swoofer</StyledNavLink>
-					</NavItem>
+					{auth.data ? (auth.data.admin ? adminLinks : null) : null}
 					<NavItem>
 						<StyledNavLink to="/about">About</StyledNavLink>
 					</NavItem>
-					{auth.data && !auth.loading ? authLinks : guestLinks}
+					{auth.data ? authLinks : guestLinks}
 					<BurgerMenu
 						size="24"
 						title="Menu"

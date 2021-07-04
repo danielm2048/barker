@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import useLogin from "../../hooks/useLogin";
 import {
 	ModalActions,
-	ModalInput,
 	ModalButton,
 	ModalError,
 } from "../../styles/StyledModal";
 import { SpinnerIcon } from "../../styles/StyledIcons";
 import { useTokenStore } from "../../store";
+import TextField from "@material-ui/core/TextField";
 
 const LoginForm = () => {
 	const setAccessToken = useTokenStore((state) => state.setAccessToken);
@@ -19,23 +19,24 @@ const LoginForm = () => {
 
 	return (
 		<form
-			onSubmit={async (e) => {
+			onSubmit={(e) => {
 				e.preventDefault();
+
+				login.mutate({ email, password });
 
 				setEmail("");
 				setPassword("");
-
-				login.mutate({ email, password });
 			}}
+			autoComplete="off"
 		>
 			<ModalActions>
-				{login.error ? (
+				{login.isError ? (
 					<ModalError>
-						<strong>{login.error}</strong>
+						<strong>{login.error.response.data}</strong>
 					</ModalError>
 				) : null}
 
-				<label htmlFor="email">
+				{/* <label htmlFor="email">
 					<strong>Email:</strong>
 				</label>
 				<ModalInput
@@ -61,6 +62,28 @@ const LoginForm = () => {
 						setPassword(e.target.value);
 					}}
 					required
+				/> */}
+				<TextField
+					required
+					id="email"
+					label="Email"
+					value={email}
+					onChange={(e) => {
+						setEmail(e.target.value);
+					}}
+					fullWidth={true}
+				/>
+				<TextField
+					required
+					id="password"
+					label="Password"
+					type="password"
+					autoComplete="current-password"
+					value={password}
+					onChange={(e) => {
+						setPassword(e.target.value);
+					}}
+					fullWidth={true}
 				/>
 
 				<ModalButton type="submit">

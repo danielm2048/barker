@@ -1,10 +1,17 @@
 import { useMutation } from "react-query";
 import axios from "axios";
+import { useTokenStore } from "../store";
 
-export default function useRefreshToken(setAccessToken) {
+const setAccessToken = useTokenStore.getState().setAccessToken;
+
+export default function useRefreshToken() {
 	return useMutation(
-		() => axios.post("/api/users/token").then((res) => res.data),
+		async () => {
+			const { data } = await axios.post("/api/users/token");
+			return data;
+		},
 		{
+			retry: 0,
 			onSuccess: (token) => setAccessToken(token),
 		}
 	);

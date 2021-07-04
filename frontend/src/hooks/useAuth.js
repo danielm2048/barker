@@ -4,9 +4,14 @@ import axios from "axios";
 export default function useAuth() {
 	return useQuery(
 		"auth",
-		() => axios.get("/api/users/me").then((res) => res.data),
+		async () => {
+			const { data } = await axios.get("/api/users/me");
+			return data;
+		},
 		{
-			retry: 1,
+			retry: 0,
+			refetchOnMount: false,
+			refetchOnWindowFocus: false,
 		}
 	);
 }

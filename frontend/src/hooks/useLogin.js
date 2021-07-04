@@ -1,11 +1,17 @@
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { useTokenStore } from "../store";
 
-export default function useLogin(setAccessToken) {
+const setAccessToken = useTokenStore.getState().setAccessToken;
+
+export default function useLogin() {
 	const queryClient = useQueryClient();
 
 	return useMutation(
-		(values) => axios.post("/api/users/login", values).then((res) => res.data),
+		async (values) => {
+			const { data } = await axios.post("/api/users/login", values);
+			return data;
+		},
 		{
 			onSuccess: (data) => {
 				setAccessToken(data.accessToken);

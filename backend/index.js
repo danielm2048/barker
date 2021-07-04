@@ -6,6 +6,7 @@ const helmet = require("helmet");
 
 const userRoutes = require("./routes/users");
 const dogRoutes = require("./routes/dogs");
+const cityRoutes = require("./routes/cities");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(helmet());
 
 app.use("/api/users", userRoutes);
 app.use("/api/dogs", dogRoutes);
+app.use("/api/cities", cityRoutes);
 
 const PORT = process.env.PORT || 5000;
 

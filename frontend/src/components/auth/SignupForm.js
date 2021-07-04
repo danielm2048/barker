@@ -2,12 +2,19 @@ import React, { useRef, useState } from "react";
 import useSignup from "../../hooks/useSignup";
 import {
 	ModalActions,
-	ModalInput,
 	ModalButton,
 	ModalError,
 } from "../../styles/StyledModal";
 import { SpinnerIcon } from "../../styles/StyledIcons";
 import { useTokenStore } from "../../store";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import CitySelect from "../form/CitySelect";
+import InputFile from "../form/InputFile";
 
 const SignupForm = () => {
 	const setAccessToken = useTokenStore((state) => state.setAccessToken);
@@ -19,19 +26,30 @@ const SignupForm = () => {
 	const [isOrganisation, setIsOrganisation] = useState(false);
 	const [phone, setPhone] = useState("");
 
-	const picRef = useRef(null);
+	const uploadedImage = useRef(null);
 
 	const signup = useSignup(setAccessToken);
 
 	return (
 		<form
-			onSubmit={async (e) => {
+			onSubmit={(e) => {
 				e.preventDefault();
 
+				signup.mutate({
+					name,
+					email,
+					password,
+					location,
+					isOrganisation,
+					phone,
+				});
+
+				setName("");
 				setEmail("");
 				setPassword("");
-
-				signup.mutate({ email, password });
+				setLocation("");
+				setIsOrganisation("");
+				setPhone("");
 			}}
 		>
 			<ModalActions>
@@ -40,95 +58,73 @@ const SignupForm = () => {
 						<strong>{signup.error}</strong>
 					</ModalError>
 				) : null}
-
-				<label htmlFor="name">
-					<strong>Name:</strong>
-				</label>
-				<ModalInput
-					type="text"
+				<TextField
+					required
+					label="Enter name..."
 					value={name}
-					placeholder="Enter name..."
-					name="name"
 					onChange={(e) => {
 						setName(e.target.value);
 					}}
-					required
+					fullWidth={true}
+					className="text-field"
 				/>
-
-				<label htmlFor="email">
-					<strong>Email:</strong>
-				</label>
-				<ModalInput
-					type="email"
+				<TextField
+					required
+					label="Email"
 					value={email}
-					placeholder="Enter email..."
-					name="email"
 					onChange={(e) => {
 						setEmail(e.target.value);
 					}}
-					required
+					fullWidth={true}
+					className="text-field"
 				/>
-
-				<label htmlFor="password">
-					<strong>Password:</strong>
-				</label>
-				<ModalInput
+				<TextField
+					required
+					label="Password"
 					type="password"
+					autoComplete="current-password"
 					value={password}
-					placeholder="Enter password..."
-					name="password"
 					onChange={(e) => {
 						setPassword(e.target.value);
 					}}
-					required
+					fullWidth={true}
+					className="text-field"
 				/>
-
-				<label>
-					<strong>Are you an organisation:</strong>
-				</label>
-				<div
-					onChange={(e) => {
-						setIsOrganisation(e.target.value);
-					}}
-				>
-					<label htmlFor="yes">Yes</label>
-					<ModalInput
-						id="yes"
-						type="radio"
-						value={true}
-						name="isOrganisation"
-						required
-					/>
-
-					<label htmlFor="no">No</label>
-					<ModalInput
-						id="no"
-						type="radio"
-						value={false}
-						name="isOrganisation"
-						required
-					/>
-				</div>
-
-				<label htmlFor="pic">
-					<strong>Picture:</strong>
-				</label>
-				<ModalInput type="file" name="pic" ref={picRef} required />
-
-				<label htmlFor="phone">
-					<strong>Phone:</strong>
-				</label>
-				<ModalInput
-					type="phone"
+				<TextField
+					label="Phone Number"
 					value={phone}
-					placeholder="Enter phone..."
-					name="phone"
 					onChange={(e) => {
 						setPhone(e.target.value);
 					}}
-					required
+					name="numberformat"
+					fullWidth={true}
+					className="text-field"
 				/>
-
+				<FormControl component="fieldset">
+					<FormLabel component="legend" className="text-field">
+						Are you an organisation?
+					</FormLabel>
+					<RadioGroup
+						row
+						aria-label="isOrg"
+						name="isOrg"
+						value={isOrganisation}
+						onChange={(e) => setIsOrganisation(e.target.value === "true")}
+					>
+						<FormControlLabel
+							value={false}
+							control={<Radio color="primary" />}
+							label="No"
+						/>
+						<FormControlLabel
+							value={true}
+							control={<Radio color="primary" />}
+							label="Yes"
+						/>
+					</RadioGroup>
+				</FormControl>
+				<CitySelect className="text-field" setLocation={setLocation} />
+				<InputFile uploadedImage={uploadedImage} />
 				<ModalButton type="submit">
 					{signup.isLoading ? <SpinnerIcon size="24" /> : "Signup"}
 				</ModalButton>

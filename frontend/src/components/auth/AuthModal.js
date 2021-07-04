@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useModalStore } from "../../store";
 import {
 	Modal,
 	ModalContent,
@@ -14,18 +15,27 @@ import { X } from "@styled-icons/feather";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import ForgotPassword from "./ForgotPassword";
+import { useCallback } from "react";
 
 const AuthModal = () => {
-	const [modal, setModal] = useState(false);
+	const { isOpen, close, open } = useModalStore();
+
 	const [alreadyUser, setAlreadyUser] = useState(true);
 	const [forgot, setForgot] = useState(false);
 
-	const handleClickOutside = (event) => {
-		if (ref.current && !ref.current.contains(event.target)) {
-			setForgot(false);
-			setModal(false);
-		}
-	};
+	const handleClickOutside = useCallback(
+		(event) => {
+			if (
+				ref.current &&
+				!ref.current.contains(event.target) &&
+				!event.target.classList[0].includes("MuiAutocomplete")
+			) {
+				setForgot(false);
+				close();
+			}
+		},
+		[close]
+	);
 
 	const ref = useRef(null);
 	useEffect(() => {
@@ -33,7 +43,7 @@ const AuthModal = () => {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [ref]);
+	}, [ref, handleClickOutside]);
 
 	const handleClick = () => {
 		setAlreadyUser((prevState) => !prevState);
@@ -46,7 +56,7 @@ const AuthModal = () => {
 					onClick={(e) => {
 						e.preventDefault();
 
-						setModal(true);
+						open();
 					}}
 					to="#"
 					$icon
@@ -55,10 +65,10 @@ const AuthModal = () => {
 				</StyledNavLink>
 			</NavItem>
 
-			<Modal modal={modal}>
+			<Modal modal={isOpen}>
 				<ModalContent ref={ref}>
 					<ModalImgContainer>
-						<Close onClick={() => setModal(false)}>
+						<Close onClick={() => close()}>
 							<X size="32" title="Close" />
 						</Close>
 						<ModalImg src={logo} alt="logo" />
@@ -73,7 +83,7 @@ const AuthModal = () => {
 					)}
 
 					{forgot ? (
-						<ForgotPassword setModal={setModal} />
+						<ForgotPassword close={close} />
 					) : alreadyUser ? (
 						<LoginForm />
 					) : (

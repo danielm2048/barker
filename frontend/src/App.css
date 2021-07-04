@@ -2,16 +2,6 @@ body {
 	font-family: "Montserrat", sans-serif;
 }
 
-.App {
-	background: #f4f4f4;
-	text-align: center;
-	/* height: 100vh; */
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-}
-
 .lds-default {
 	display: inline-block;
 	position: relative;
@@ -96,4 +86,15 @@ body {
 	50% {
 		transform: scale(1.5);
 	}
+}
+
+.input-file {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.text-field {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
