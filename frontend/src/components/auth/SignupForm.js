@@ -29,7 +29,7 @@ const SignupForm = () => {
 	const uploadedImage = useRef(null);
 
 	const signup = useSignup(setAccessToken);
-
+	console.log(uploadedImage);
 	return (
 		<form
 			onSubmit={(e) => {
@@ -60,7 +60,7 @@ const SignupForm = () => {
 				) : null}
 				<TextField
 					required
-					label="Enter name..."
+					label="Enter Name"
 					value={name}
 					onChange={(e) => {
 						setName(e.target.value);
@@ -101,7 +101,11 @@ const SignupForm = () => {
 					className="text-field"
 				/>
 				<FormControl component="fieldset">
-					<FormLabel component="legend" className="text-field">
+					<FormLabel
+						component="legend"
+						style={{ paddingTop: "10px" }}
+						className="text-field"
+					>
 						Are you an organisation?
 					</FormLabel>
 					<RadioGroup

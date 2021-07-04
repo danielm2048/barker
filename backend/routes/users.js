@@ -1,5 +1,6 @@
 require("dotenv").config();
 const router = require("express").Router();
+const fileUpload = require("express-fileupload");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -65,7 +66,7 @@ router.post("/signup", async (req, res) => {
 
 	const url = `https://barker.s3.eu-central-1.amazonaws.com/${picId}`;
 
-	s3.upload(s3Params, (err, data) => {
+	s3.upload(s3Params, async (err, data) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).json("Couldn't upload pictures...");
@@ -147,7 +148,39 @@ router.get("/me", authorizeUser, async (req, res) => {
 
 	const user = await User.findById(userId);
 
-	res.json(user);
+	const city = await City.findById(user.locationId);
+
+	res.json({
+		id: user._id,
+		admin: user.admin,
+		name: user.name,
+		email: user.email,
+		pic: user.pic,
+		city: city.name,
+		isOrganisation: user.isOrganisation,
+	});
+});
+
+router.get("/:id", async (req, res) => {
+	const { id } = req.params;
+
+	const user = await User.findById(id);
+
+	if (!user) {
+		return res.status(404).json("User not found...");
+	}
+
+	const city = await City.findById(user.locationId);
+
+	res.json({
+		id: user._id,
+		admin: user.admin,
+		name: user.name,
+		email: user.email,
+		pic: user.pic,
+		city: city.name,
+		isOrganisation: user.isOrganisation,
+	});
 });
 
 module.exports = router;

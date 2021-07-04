@@ -28,7 +28,7 @@ const AuthModal = () => {
 			if (
 				ref.current &&
 				!ref.current.contains(event.target) &&
-				!event.target.classList[0].includes("MuiAutocomplete")
+				!event.target.classList[0]?.includes("MuiAutocomplete")
 			) {
 				setForgot(false);
 				close();

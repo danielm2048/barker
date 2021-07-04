@@ -10,14 +10,15 @@ const CitySelect = ({ setLocation }) => {
 	const { data: cities, isLoading, isError } = useCities(searchText);
 
 	if (isError) {
-		alert("Can't get cities at the moment");
+		// alert("Can't get cities at the moment");
+		console.log("Can't get cities at the moment");
 	}
 
 	return (
 		<Autocomplete
 			id="cities"
-			options={isLoading ? [<SpinnerIcon size="24" />] : cities.data}
-			getOptionLabel={(option) => (isLoading ? "Loading..." : option.name)}
+			options={isLoading ? [<SpinnerIcon size="24" />] : cities?.data}
+			getOptionLabel={(option) => (isLoading ? "Loading..." : option?.name)}
 			fullWidth={true}
 			onChange={(_, value) => setLocation(value)}
 			renderInput={(params) => (

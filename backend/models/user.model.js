@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			default: "https://barker.s3.eu-central-1.amazonaws.com/profile.png",
 		},
+		info: {
+			type: String,
+		},
 		locationId: {
 			type: String,
 			required: true,

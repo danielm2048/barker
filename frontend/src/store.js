@@ -12,7 +12,7 @@ export const useTokenStore = create((set) => ({
 }));
 
 export const useModalStore = create((set) => ({
-	isOpen: "",
+	isOpen: false,
 	open: () => set({ isOpen: true }),
 	close: () => set({ isOpen: false }),
 }));

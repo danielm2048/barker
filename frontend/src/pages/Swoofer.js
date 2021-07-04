@@ -1,4 +1,4 @@
-import usePets from "../hooks/usePets";
+import useDogs from "../hooks/useDogs";
 import { useChoiceStore } from "../store";
 
 import Loader from "../components/Loader";
@@ -6,8 +6,11 @@ import Loader from "../components/Loader";
 import Button from "../styles/StyledButton";
 import { Wrapper, Item, CardInfo } from "../styles/StyledFrame";
 
+import { ArrowLeft } from "@styled-icons/feather";
+import { HeartIcon } from "../styles/StyledIcons";
+
 const Swoofer = () => {
-	const { isLoading, isError, error, data } = usePets("KEFAR SAVA");
+	const { isLoading, isError, error, data } = useDogs("Kefar Sava");
 
 	const setIsClicked = useChoiceStore((state) => state.setIsClicked);
 
@@ -48,10 +51,10 @@ const Swoofer = () => {
 				}}
 			>
 				<Button circle onClick={() => setIsClicked(true, "left")}>
-					🤔
+					<ArrowLeft size="24" />
 				</Button>
 				<Button circle onClick={() => setIsClicked(true, "right")}>
-					😍
+					<HeartIcon size="24" />
 				</Button>
 			</div>
 		</>

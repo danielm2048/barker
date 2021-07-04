@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Swoofer from "./pages/Swoofer";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Loader from "./components/Loader";
 
@@ -36,6 +37,7 @@ const Routes = () => {
 			<Route path="/about" component={About} />
 			<Route path="/contact" component={Contact} />
 			<PrivateRoute path="/swoofer" component={Swoofer} />
+			<Route path="/profile/:id" component={Profile} />
 			<Route path="/404" component={NotFound} />
 			<Redirect to="/404" />
 		</Switch>
