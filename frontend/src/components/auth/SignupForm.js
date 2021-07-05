@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useSignup from "../../hooks/useSignup";
 import {
-	ModalActions,
-	ModalButton,
-	ModalError,
+  ModalActions,
+  ModalButton,
+  ModalError,
 } from "../../styles/StyledModal";
 import { SpinnerIcon } from "../../styles/StyledIcons";
 import { useTokenStore } from "../../store";
@@ -17,124 +17,133 @@ import CitySelect from "../form/CitySelect";
 import InputFile from "../form/InputFile";
 
 const SignupForm = () => {
-	const setAccessToken = useTokenStore((state) => state.setAccessToken);
+  const setAccessToken = useTokenStore((state) => state.setAccessToken);
 
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [location, setLocation] = useState("");
-	const [isOrganisation, setIsOrganisation] = useState(false);
-	const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [location, setLocation] = useState("");
+  const [isOrganization, setIsOrganization] = useState(false);
+  const [phone, setPhone] = useState("");
 
-	const uploadedImage = useRef(null);
+  const uploadedImage = useRef(null);
 
-	const signup = useSignup(setAccessToken);
-	console.log(uploadedImage);
-	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
+  const signup = useSignup(setAccessToken);
 
-				signup.mutate({
-					name,
-					email,
-					password,
-					location,
-					isOrganisation,
-					phone,
-				});
+  useEffect(() => {
+    if (signup.isSuccess) {
+      setName("");
+      setPassword("");
+      setEmail("");
+      setLocation("");
+      setPhone("");
+    }
+  }, [signup.isSuccess]);
 
-				setName("");
-				setEmail("");
-				setPassword("");
-				setLocation("");
-				setIsOrganisation("");
-				setPhone("");
-			}}
-		>
-			<ModalActions>
-				{signup.error ? (
-					<ModalError>
-						<strong>{signup.error}</strong>
-					</ModalError>
-				) : null}
-				<TextField
-					required
-					label="Enter Name"
-					value={name}
-					onChange={(e) => {
-						setName(e.target.value);
-					}}
-					fullWidth={true}
-					className="text-field"
-				/>
-				<TextField
-					required
-					label="Email"
-					value={email}
-					onChange={(e) => {
-						setEmail(e.target.value);
-					}}
-					fullWidth={true}
-					className="text-field"
-				/>
-				<TextField
-					required
-					label="Password"
-					type="password"
-					autoComplete="current-password"
-					value={password}
-					onChange={(e) => {
-						setPassword(e.target.value);
-					}}
-					fullWidth={true}
-					className="text-field"
-				/>
-				<TextField
-					label="Phone Number"
-					value={phone}
-					onChange={(e) => {
-						setPhone(e.target.value);
-					}}
-					name="numberformat"
-					fullWidth={true}
-					className="text-field"
-				/>
-				<FormControl component="fieldset">
-					<FormLabel
-						component="legend"
-						style={{ paddingTop: "10px" }}
-						className="text-field"
-					>
-						Are you an organisation?
-					</FormLabel>
-					<RadioGroup
-						row
-						aria-label="isOrg"
-						name="isOrg"
-						value={isOrganisation}
-						onChange={(e) => setIsOrganisation(e.target.value === "true")}
-					>
-						<FormControlLabel
-							value={false}
-							control={<Radio color="primary" />}
-							label="No"
-						/>
-						<FormControlLabel
-							value={true}
-							control={<Radio color="primary" />}
-							label="Yes"
-						/>
-					</RadioGroup>
-				</FormControl>
-				<CitySelect className="text-field" setLocation={setLocation} />
-				<InputFile uploadedImage={uploadedImage} />
-				<ModalButton type="submit">
-					{signup.isLoading ? <SpinnerIcon size="24" /> : "Signup"}
-				</ModalButton>
-			</ModalActions>
-		</form>
-	);
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("pic", uploadedImage.current.files[0]);
+        formData.append("name", name);
+        formData.append("password", password);
+        formData.append("email", email);
+        formData.append("locationId", location._id);
+        formData.append("phone", phone);
+        formData.append("isOrganization", isOrganization);
+
+        signup.mutate(formData);
+      }}
+    >
+      <ModalActions>
+        {signup.error ? (
+          <ModalError>
+            <strong>{signup.error.response.data}</strong>
+          </ModalError>
+        ) : null}
+        <TextField
+          required
+          label="Enter Name"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          fullWidth={true}
+          className="text-field"
+        />
+        <TextField
+          required
+          label="Email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+          fullWidth={true}
+          className="text-field"
+        />
+        <TextField
+          required
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          fullWidth={true}
+          className="text-field"
+        />
+        <TextField
+          label="Phone Number"
+          value={phone}
+          onChange={(e) => {
+            setPhone(e.target.value);
+          }}
+          name="numberformat"
+          fullWidth={true}
+          className="text-field"
+        />
+        <FormControl component="fieldset">
+          <FormLabel
+            component="legend"
+            style={{ paddingTop: "10px" }}
+            className="text-field"
+          >
+            Are you an organization?
+          </FormLabel>
+          <RadioGroup
+            row
+            aria-label="isOrg"
+            name="isOrg"
+            value={isOrganization}
+            onChange={(e) => setIsOrganization(e.target.value === "true")}
+          >
+            <FormControlLabel
+              value={false}
+              control={<Radio color="primary" />}
+              label="No"
+            />
+            <FormControlLabel
+              value={true}
+              control={<Radio color="primary" />}
+              label="Yes"
+            />
+          </RadioGroup>
+        </FormControl>
+        <CitySelect
+          className="text-field"
+          location={location}
+          setLocation={setLocation}
+        />
+        <InputFile uploadedImage={uploadedImage} required={false} />
+        <ModalButton type="submit" disabled={signup.isLoading}>
+          {signup.isLoading ? <SpinnerIcon size="24" /> : "Signup"}
+        </ModalButton>
+      </ModalActions>
+    </form>
+  );
 };
 
 export default SignupForm;
