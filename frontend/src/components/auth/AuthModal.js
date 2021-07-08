@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useModalStore } from "../../store";
 import {
 	Modal,
@@ -9,13 +9,12 @@ import {
 	TextButton,
 } from "../../styles/StyledModal";
 import { UserIcon } from "../../styles/StyledIcons";
-import { NavItem, StyledNavLink } from "../../styles/StyledNavbar";
+import { NavItem, StyledNavButton } from "../../styles/StyledNavbar";
 import logo from "../../images/BarkerLogo.png";
 import { X } from "@styled-icons/feather";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import ForgotPassword from "./ForgotPassword";
-import { useCallback } from "react";
 
 const AuthModal = () => {
 	const { isOpen, close, open } = useModalStore();
@@ -52,17 +51,16 @@ const AuthModal = () => {
 	return (
 		<>
 			<NavItem>
-				<StyledNavLink
+				<StyledNavButton
 					onClick={(e) => {
 						e.preventDefault();
 
 						open();
 					}}
-					to="#"
 					$icon
 				>
 					<UserIcon size="24" title="Login" />
-				</StyledNavLink>
+				</StyledNavButton>
 			</NavItem>
 
 			<Modal modal={isOpen}>

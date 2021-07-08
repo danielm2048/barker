@@ -3,35 +3,44 @@ import "./App.css";
 
 import useRefreshToken from "./hooks/useRefreshToken";
 
+import { useDrawerStore } from "./store";
+
 import Routes from "./Routes";
 import Navbar from "./components/layout/Navbar";
 import Toast from "./components/layout/Toast";
 import Footer from "./components/layout/Footer";
 import Loader from "./components/Loader";
 
+import { Main, Canvas } from "./styles/StyledLayout";
+
 function App() {
-  const { loading, error, mutate } = useRefreshToken();
+	const { loading, error, mutate } = useRefreshToken();
 
-  useEffect(() => {
-    mutate();
-  }, [mutate]);
+	const { open, setOpen } = useDrawerStore();
 
-  if (loading) {
-    return <Loader />;
-  }
+	useEffect(() => {
+		mutate();
+	}, [mutate]);
 
-  if (error) {
-    console.error(error);
-  }
+	if (loading) {
+		return <Loader />;
+	}
 
-  return (
-    <>
-      <Navbar />
-      <Routes />
-      <Toast />
-      <Footer />
-    </>
-  );
+	if (error) {
+		console.error(error);
+	}
+
+	return (
+		<>
+			<Main>
+				<Canvas drawer={open} onClick={() => setOpen(false)} />
+				<Navbar />
+				<Routes />
+				<Toast />
+				<Footer />
+			</Main>
+		</>
+	);
 }
 
 export default App;

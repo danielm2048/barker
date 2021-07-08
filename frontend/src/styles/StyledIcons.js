@@ -1,12 +1,21 @@
 import styled, { keyframes } from "styled-components";
 import { StyledNavLink } from "./StyledNavbar";
-import { Heart, User, ArrowLeft } from "@styled-icons/feather";
+import { MenuItem } from "./StyledMenu";
+import { Heart, User, ArrowLeft, Menu } from "@styled-icons/feather";
 import { Spinner3 } from "@styled-icons/evil";
 
 export const UserIcon = styled(User)`
 	transition: fill 0.1s;
 	&:hover,
-	${StyledNavLink}:hover & {
+	${StyledNavLink}:hover &,
+	${MenuItem}:hover & {
+		fill: black;
+	}
+`;
+
+export const MenuIcon = styled(Menu)`
+	transition: fill 0.1s;
+	&:hover {
 		fill: black;
 	}
 `;
@@ -14,7 +23,8 @@ export const UserIcon = styled(User)`
 export const HeartIcon = styled(Heart)`
 	transition: fill 0.1s;
 	&:hover,
-	${StyledNavLink}:hover & {
+	${StyledNavLink}:hover &,
+	${MenuItem}:hover & {
 		fill: red;
 	}
 `;

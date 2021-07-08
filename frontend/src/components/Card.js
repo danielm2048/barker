@@ -5,7 +5,7 @@ import { useChoiceStore } from "../store";
 
 import { CardFrame } from "../styles/StyledFrame";
 
-const Card = ({ children, onVote, isTop, ...props }) => {
+const Card = ({ children, onVote, isTop, parentNode, ...props }) => {
 	const cardRef = useRef(null);
 
 	const choice = useChoiceStore();
@@ -42,9 +42,8 @@ const Card = ({ children, onVote, isTop, ...props }) => {
 	const flyAway = useCallback(
 		(min, direction, velocity) => {
 			const flyAwayDistance = (direction) => {
-				const parentWidth =
-					cardRef.current.parentNode.getBoundingClientRect().width;
-				const childWidth = cardRef.current.getBoundingClientRect().width;
+				const parentWidth = parentNode.getBoundingClientRect().width;
+				const childWidth = 350;
 
 				return direction === "left"
 					? -parentWidth / 2 - childWidth / 2
@@ -56,19 +55,20 @@ const Card = ({ children, onVote, isTop, ...props }) => {
 				controls.start({ x: flyAwayDistance(direction) });
 			}
 		},
-		[controls]
+		[controls, parentNode]
 	);
 
 	useEffect(() => {
 		const unsubscribeX = x.onChange(() => {
 			const childNode = cardRef.current;
-			const parentNode = cardRef.current.parentNode;
-			const result = getVote(childNode, parentNode);
-			result !== undefined && onVote(result);
+			if (childNode) {
+				const result = getVote(childNode, childNode.parentNode);
+				result !== undefined && onVote(result);
+			}
 		});
 
 		return () => unsubscribeX();
-	});
+	}, [onVote, x]);
 
 	useEffect(() => {
 		if (choice.isClicked && isTop) {

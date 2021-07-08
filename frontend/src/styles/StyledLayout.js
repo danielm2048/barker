@@ -3,6 +3,25 @@ import styled from "styled-components";
 
 import homeHeader from "../images/header3.png";
 
+export const Main = styled.div`
+	display: block;
+	padding: 0.1px;
+	position: relative;
+	min-height: 100vh;
+`;
+
+export const Canvas = styled.div`
+	height: 100%;
+	width: ${(props) => (props.drawer ? "100%" : 0)};
+	position: fixed;
+	z-index: 3;
+	background-color: rgba(0, 0, 0, 0.9);
+	overflow-y: auto;
+	overflow-x: hidden;
+	opacity: ${(props) => (props.drawer ? 0.8 : 0)};
+	transition: opacity 0.5s;
+`;
+
 export const HomeHeader = styled.div`
 	position: absolute;
 	top: 0;
@@ -52,4 +71,13 @@ export const HomeLink = styled(Link)`
 	font-size: 18px;
 	padding: 8px;
 	text-decoration: none;
+`;
+
+export const SwooferButtons = styled.div`
+	position: absolute;
+	top: ${(props) => props.top}%;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	z-index: 1;
 `;

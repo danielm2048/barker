@@ -13,7 +13,7 @@ const About = () => {
 				backgroundRepeat: "no-repeat",
 				backgroundSize: "100% 100%",
 				backgroundPosition: "right",
-				height: "87vh",
+				height: "88vh",
 				// width: "100%",
 			}}
 		>

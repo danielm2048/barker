@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 
-export default function useCities() {
+export default function useBreeds() {
 	return useQuery(
-		"cities",
+		"breeds",
 		async () => {
-			const { data } = await axios.get("/api/cities/");
+			const { data } = await axios.get("/api/dogs/breeds");
 			return data;
 		},
 		{

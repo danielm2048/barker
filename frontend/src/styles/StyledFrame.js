@@ -29,7 +29,7 @@ export const CardInfo = styled.div`
 	flex-direction: column;
 	width: 90%;
 	text-align: left;
-	margin-top: 100%;
+	margin-top: 80%;
 
 	h1 {
 		font-size: 26px;
@@ -67,7 +67,7 @@ export const CardInfo = styled.div`
 `;
 
 export const Wrapper = styled(Stack)`
-	/* background: #1f2937; */
+	background: #eed3cc;
 `;
 
 export const Item = styled.div`
@@ -76,8 +76,8 @@ export const Item = styled.div`
 	background-size: 95% 65%;
 	background-repeat: no-repeat;
 	background-position: center 10px;
-	width: 275px;
-	height: 480px;
+	width: 350px;
+	height: 500px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -90,4 +90,30 @@ export const Item = styled.div`
 		let rotation = Math.random() * (5 - -5) + -5;
 		return `rotate(${rotation}deg)`;
 	}};
+`;
+
+export const SlideshowContainer = styled.div`
+	width: 50%;
+	height: 75%;
+	/* overflow: hidden; */
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	margin: 150px 0;
+
+	img {
+		position: absolute;
+		max-width: 55vh;
+		max-height: 55vh;
+		margin-left: auto;
+		margin-right: auto;
+		left: 0;
+		right: 0;
+	}
+
+	button {
+		z-index: 4;
+	}
 `;

@@ -14,6 +14,10 @@ const dogsSchema = new mongoose.Schema(
 			type: Number,
 			required: true,
 		},
+		gender: {
+			type: Boolean,
+			required: true,
+		},
 		pictures: [
 			{
 				type: String,
