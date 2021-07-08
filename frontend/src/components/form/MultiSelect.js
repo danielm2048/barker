@@ -8,37 +8,38 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const MultiSelect = ({ data, values, setValues, label }) => {
-	return (
-		<Autocomplete
-			multiple
-			id={`multi-select-${label}`}
-			options={data}
-			value={values}
-			onChange={(_, newValues) => setValues(newValues)}
-			disableCloseOnSelect
-			getOptionLabel={(option) => option}
-			renderOption={(option, { selected }) => (
-				<>
-					<Checkbox
-						icon={icon}
-						checkedIcon={checkedIcon}
-						style={{ marginRight: 8 }}
-						checked={selected}
-					/>
-					<span className="Mui">{option}</span>
-				</>
-			)}
-			style={{ width: 500 }}
-			renderInput={(params) => (
-				<TextField
-					{...params}
-					variant="outlined"
-					label="Checkboxes"
-					placeholder={label}
-				/>
-			)}
-		/>
-	);
+  return (
+    <Autocomplete
+      multiple
+      id={`multi-select-${label}`}
+      options={data}
+      value={values}
+      onChange={(_, newValues) => setValues(newValues)}
+      disableCloseOnSelect
+      getOptionLabel={(option) => option}
+      renderOption={(option, { selected }) => (
+        <>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checkedIcon}
+            style={{ marginRight: 8 }}
+            checked={selected}
+          />
+          <span className="Mui">{option}</span>
+        </>
+      )}
+      style={{ width: 500 }}
+      renderInput={(params) => (
+        <TextField
+          fullWidth={true}
+          {...params}
+          variant="outlined"
+          label="Checkboxes"
+          placeholder={label}
+        />
+      )}
+    />
+  );
 };
 
 export default MultiSelect;

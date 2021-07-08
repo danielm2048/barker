@@ -1,5 +1,7 @@
+import NotFoundPage from "../styles/StyledNotFound";
+
 const NotFound = () => {
-	return <div>Sorry nothing here! literally...</div>;
+  return <NotFoundPage></NotFoundPage>;
 };
 
 export default NotFound;

@@ -14,196 +14,196 @@ const City = require("../models/city.model");
 const Saved = require("../models/saved.model");
 
 const {
-	createAccessToken,
-	createRefreshToken,
-	sendRefreshToken,
+  createAccessToken,
+  createRefreshToken,
+  sendRefreshToken,
 } = require("../utils/auth");
 
 router.use(fileUpload());
 
 router.post("/signup", async (req, res) => {
-	const { email, name, password, isOrganization, locationId, phone } = req.body;
+  const { email, name, password, isOrganization, locationId, phone } = req.body;
 
-	if (
-		!email ||
-		!name ||
-		!password ||
-		isOrganization === undefined ||
-		!locationId
-	) {
-		return res.status(401).json("Please enter all required fields");
-	}
+  if (
+    !email ||
+    !name ||
+    !password ||
+    isOrganization === undefined ||
+    !locationId
+  ) {
+    return res.status(401).json("Please enter all required fields");
+  }
 
-	const user = await User.findOne({ email }).catch((err) =>
-		res.status(500).send(err)
-	);
-	if (user) {
-		return res.status(401).json("User already exists");
-	}
+  const user = await User.findOne({ email }).catch((err) =>
+    res.status(500).send(err)
+  );
+  if (user) {
+    return res.status(401).json("User already exists");
+  }
 
-	const hashedPassword = await bcrypt
-		.hash(password, 10)
-		.catch((err) => res.status(500).send(err));
+  const hashedPassword = await bcrypt
+    .hash(password, 10)
+    .catch((err) => res.status(500).send(err));
 
-	let url;
+  let url;
 
-	if (req.files) {
-		const { pic } = req.files;
+  if (req.files) {
+    const { pic } = req.files;
 
-		const picId = nanoid();
+    const picId = nanoid();
 
-		const s3Params = {
-			Bucket: "barker",
-			Key: picId,
-			Body: pic.data,
-			ACL: "public-read",
-			ContentType: pic.mimetype,
-		};
+    const s3Params = {
+      Bucket: "barker",
+      Key: picId,
+      Body: pic.data,
+      ACL: "public-read",
+      ContentType: pic.mimetype,
+    };
 
-		const s3UploadedData = await s3uploader(s3Params);
+    const s3UploadedData = await s3uploader(s3Params);
 
-		url = `https://barker.s3.eu-central-1.amazonaws.com/${picId}`;
-	}
+    url = `https://barker.s3.eu-central-1.amazonaws.com/${picId}`;
+  }
 
-	const newUser = new User({
-		name: name,
-		email,
-		password: hashedPassword,
-		isOrganization,
-		locationId,
-		phone,
-		pic: url,
-		admin: false,
-	});
+  const newUser = new User({
+    name: name,
+    email,
+    password: hashedPassword,
+    isOrganization,
+    locationId,
+    phone,
+    pic: url,
+    admin: false,
+  });
 
-	await newUser.save().catch((err) => res.status(500).send(err));
+  await newUser.save().catch((err) => res.status(500).send(err));
 
-	const accessToken = createAccessToken(newUser);
-	const refreshToken = createRefreshToken(newUser);
-	sendRefreshToken(res, refreshToken);
+  const accessToken = createAccessToken(newUser);
+  const refreshToken = createRefreshToken(newUser);
+  sendRefreshToken(res, refreshToken);
 
-	res.json({ user: newUser, accessToken });
+  res.json({ user: newUser, accessToken });
 });
 
 router.post("/login", async (req, res) => {
-	const { email, password } = req.body;
+  const { email, password } = req.body;
 
-	if (!email || !password) {
-		return res.status(401).json("Please enter all fields!");
-	}
-	const user = await User.findOne({ email }).catch((err) =>
-		res.status(500).send(err)
-	);
-	if (!user) {
-		return res.status(404).json("User was not found!");
-	}
-	const match = await bcrypt
-		.compare(password, user.password)
-		.catch((err) => res.status(500).send(err));
-	if (!match) {
-		return res.status(409).json("Password is incorrect");
-	}
+  if (!email || !password) {
+    return res.status(401).json("Please enter all fields!");
+  }
+  const user = await User.findOne({ email }).catch((err) =>
+    res.status(500).send(err)
+  );
+  if (!user) {
+    return res.status(404).json("User was not found!");
+  }
+  const match = await bcrypt
+    .compare(password, user.password)
+    .catch((err) => res.status(500).send(err));
+  if (!match) {
+    return res.status(409).json("Password is incorrect");
+  }
 
-	const accessToken = createAccessToken(user);
-	const refreshToken = createRefreshToken(user);
-	sendRefreshToken(res, refreshToken);
+  const accessToken = createAccessToken(user);
+  const refreshToken = createRefreshToken(user);
+  sendRefreshToken(res, refreshToken);
 
-	res.json({ user, accessToken });
+  res.json({ user, accessToken });
 });
 
 router.post("/logout", (req, res) => {
-	sendRefreshToken(res, "");
-	res.json({ loggedOut: true });
+  sendRefreshToken(res, "");
+  res.json({ loggedOut: true });
 });
 
 router.post("/token", cookieParser(), (req, res) => {
-	const refreshToken = req.cookies["refresh-token"];
+  const refreshToken = req.cookies["refresh-token"];
 
-	if (!refreshToken) {
-		return res.status(403).json("Refresh token is required");
-	}
+  if (!refreshToken) {
+    return res.status(403).json("Refresh token is required");
+  }
 
-	const { userId, name, email } = jwt.verify(
-		refreshToken,
-		process.env.REFRESH_TOKEN_SECRET
-	);
+  const { userId, name, email } = jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET
+  );
 
-	const accessToken = createAccessToken({ id: userId, name, email });
+  const accessToken = createAccessToken({ id: userId, name, email });
 
-	sendRefreshToken(res, refreshToken);
-	res.json(accessToken);
+  sendRefreshToken(res, refreshToken);
+  res.json(accessToken);
 });
 
 router.get("/me", authorizeUser, async (req, res) => {
-	const { userId } = req.user;
+  const { userId } = req.user;
 
-	const user = await User.findById(userId);
+  const user = await User.findById(userId);
 
-	const city = await City.findById(user.locationId);
+  const city = await City.findById(user.locationId);
 
-	res.json({
-		id: user._id,
-		admin: user.admin,
-		name: user.name,
-		email: user.email,
-		pic: user.pic,
-		city: city.name,
-		isOrganization: user.isOrganization,
-	});
+  res.json({
+    id: user._id,
+    admin: user.admin,
+    name: user.name,
+    email: user.email,
+    pic: user.pic,
+    city: city.name,
+    isOrganization: user.isOrganization,
+  });
 });
 
 router.get("/:id", async (req, res) => {
-	const { id } = req.params;
+  const { id } = req.params;
 
-	const user = await User.findById(id);
+  const user = await User.findById(id);
 
-	if (!user) {
-		return res.status(404).json("User not found...");
-	}
+  if (!user) {
+    return res.status(404).json("User not found...");
+  }
 
-	const city = await City.findById(user.locationId);
+  const city = await City.findById(user.locationId);
 
-	res.json({
-		id: user._id,
-		admin: user.admin,
-		name: user.name,
-		email: user.email,
-		pic: user.pic,
-		city: city.name,
-		isOrganization: user.isOrganization,
-	});
+  res.json({
+    id: user._id,
+    admin: user.admin,
+    name: user.name,
+    email: user.email,
+    pic: user.pic,
+    city: city.name,
+    isOrganization: user.isOrganization,
+  });
 });
 
 router.get("/saved", authorizeUser, async (req, res) => {
-	const { userId } = req.user;
+  const { userId } = req.user;
 
-	const savedDogs = await Saved.find({ userId });
+  const savedDogs = await Saved.find({ userId });
 
-	res.json(savedDogs);
+  res.json(savedDogs);
 });
 
-router.post("/save-dog", authorizeUser, async (req, res) => {
-	const { userId } = req.user;
-	const { dogId } = req.params;
+router.post("/save-dog/:dogId", authorizeUser, async (req, res) => {
+  const { userId } = req.user;
+  const { dogId } = req.params;
 
-	const newSave = new Saved({ userId, dogId });
+  const newSave = new Saved({ userId, dogId });
 
-	await newSave.save();
+  await newSave.save();
 
-	res.json("Dog has been saved successfully!");
+  res.json("Dog has been saved successfully!");
 });
 
 router.delete("/unsave-dog", authorizeUser, async (req, res) => {
-	const { userId } = req.user;
-	const { dogId } = req.params;
+  const { userId } = req.user;
+  const { dogId } = req.params;
 
-	const save = await Saved.findOneAndDelete({ userId, dogId });
+  const save = await Saved.findOneAndDelete({ userId, dogId });
 
-	if (!save) {
-		return res.status(404).json("Saved dog was not found");
-	}
+  if (!save) {
+    return res.status(404).json("Saved dog was not found");
+  }
 
-	res.json("Dog has been unsaved successfully");
+  res.json("Dog has been unsaved successfully");
 });
 
 module.exports = router;

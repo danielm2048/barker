@@ -10,160 +10,179 @@ import Button from "../styles/StyledButton";
 import { Wrapper, Item, CardInfo } from "../styles/StyledFrame";
 
 import {
-	ArrowLeft,
-	MoreVertical,
-	CornerDownLeft,
-	Filter,
+  ArrowLeft,
+  MoreVertical,
+  CornerDownLeft,
+  Filter,
 } from "@styled-icons/feather";
 import { HeartIcon } from "../styles/StyledIcons";
 import { SwooferButtons } from "../styles/StyledLayout";
 import FilterModal from "../components/layout/FilterModal";
 
+const SaveDog = async (data) => {
+  return await axios.post(`/api/users/save-dog/${data.id}`);
+};
+
 const Swoofer = () => {
-	// const { isLoading, isError, error, data } = useDogs("Kefar Sava");
+  // const { isLoading, isError, error, data } = useDogs("Kefar Sava");
 
-	const [data, setData] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [filter, setFilter] = useState(false);
-	const setIsClicked = useChoiceStore((state) => state.setIsClicked);
-	const { open, setOpen } = useDrawerStore();
-	const [filterModal, setFilterModal] = useState(false);
+  const [data, setData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filter, setFilter] = useState(false);
+  const setIsClicked = useChoiceStore((state) => state.setIsClicked);
+  const { open, setOpen } = useDrawerStore();
+  const [filterModal, setFilterModal] = useState(false);
 
-	const [topDog, setTopDog] = useState(null);
-	const [topDogIndex, setTopDogIndex] = useState(null);
+  const [topDog, setTopDog] = useState(null);
+  const [topDogIndex, setTopDogIndex] = useState(null);
 
-	useEffect(() => {
-		async function fetch() {
-			setIsLoading(true);
-			if (filter) {
-				const { data } = await axios.get(`/api/dogs/${filter}`);
-				setData(data);
-			} else {
-				const { data } = await axios.get(`/api/dogs/`);
-				setData(data);
-			}
-			setIsLoading(false);
-		}
-		fetch();
-	}, [filter]);
+  useEffect(() => {
+    async function fetch() {
+      setIsLoading(true);
+      if (filter) {
+        const { data } = await axios.get(`/api/dogs/${filter}`);
+        setData(data);
+      } else {
+        const { data } = await axios.get(`/api/dogs/`);
+        setData(data);
+      }
+      setTopDogIndex(null);
+      setIsLoading(false);
+    }
+    fetch();
+  }, [filter]);
 
-	useEffect(() => {
-		if (data) {
-			if (topDogIndex === null) {
-				setTopDogIndex(data.length - 1);
-				setTopDog(data[data.length - 1]);
-			} else if (topDogIndex !== data.length - 1) {
-				setTopDog(data[topDogIndex]);
-			}
-		}
-	}, [topDogIndex, data]);
+  useEffect(() => {
+    if (data) {
+      if (topDogIndex === null) {
+        setTopDogIndex(data.length - 1);
+        setTopDog(data[data.length - 1]);
+      } else if (topDogIndex !== data.length - 1) {
+        setTopDog(data[topDogIndex]);
+      }
+    }
+  }, [topDogIndex, data]);
 
-	if (isLoading || !data) {
-		return <Loader />;
-	}
+  if (isLoading || !data) {
+    return <Loader />;
+  }
 
-	return (
-		<>
-			<Wrapper
-				onVote={(vote) => console.log(vote)}
-				setTopDogIndex={setTopDogIndex}
-			>
-				{data.map((pet, i) => (
-					<Item key={i} whileTap={{ scale: 1.15 }} pic={pet.pics[0]}>
-						<CardInfo>
-							<div style={{ display: "flex", alignItems: "baseline" }}>
-								<h1>{pet.name} </h1>
-								<h2>
-									{pet.age >= 12
-										? `${pet.age / 12} Years Old`
-										: `${pet.age} Months Old `}
-								</h2>
-								<h3>{pet.breed}</h3>
-							</div>
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									alignItems: "center",
-									height: 50,
-								}}
-							>
-								<div>
-									<span style={{ fontWeight: "bold" }}>{pet.city}</span>
-									<p>{pet.gender ? "Female" : "Male"}</p>
-								</div>
-								<Button
-									color="transparent"
-									onClick={() => setOpen(true)}
-									style={{ width: 60, height: 60 }}
-								>
-									<MoreVertical
-										size="30"
-										onClick={() => setOpen(true)}
-										style={{
-											fill: "black",
-										}}
-									/>
-								</Button>
-							</div>
-						</CardInfo>
-					</Item>
-				))}
-			</Wrapper>
+  return (
+    <>
+      <Wrapper
+        onVote={(vote) => {
+          console.log(topDog);
+          console.log(data);
+          console.log(topDogIndex);
+          vote ? SaveDog(topDog) : console.log(vote);
+        }}
+        setTopDogIndex={setTopDogIndex}
+      >
+        {data.map((pet, i) => (
+          <Item key={i} whileTap={{ scale: 1.15 }} pic={pet.pics[0]}>
+            <CardInfo>
+              <div style={{ display: "flex", alignItems: "baseline" }}>
+                <h1>{pet.name} </h1>
+                <h2>
+                  {pet.age >= 12
+                    ? `${pet.age / 12} Years Old`
+                    : `${pet.age} Months Old `}
+                </h2>
+                <h3>{pet.breed}</h3>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: 50,
+                }}
+              >
+                <div>
+                  <span style={{ fontWeight: "bold" }}>{pet.city}</span>
+                  <p>{pet.gender ? "Female" : "Male"}</p>
+                </div>
+                <Button
+                  color="transparent"
+                  onClick={() => setOpen(true)}
+                  style={{ width: 60, height: 60 }}
+                >
+                  <MoreVertical
+                    size="30"
+                    onClick={() => setOpen(true)}
+                    style={{
+                      fill: "black",
+                    }}
+                  />
+                </Button>
+              </div>
+            </CardInfo>
+          </Item>
+        ))}
+      </Wrapper>
 
-			<SwooferButtons top="50">
-				<Button circle onClick={() => setIsClicked(true, "left")}>
-					<ArrowLeft size="24" />
-				</Button>
-				<Button circle onClick={() => setIsClicked(true, "right")}>
-					<HeartIcon size="24" />
-				</Button>
-			</SwooferButtons>
+      <SwooferButtons top="50">
+        <Button
+          style={{ boxShadow: "2px 2px 4px #000000" }}
+          circle
+          onClick={() => setIsClicked(true, "left")}
+        >
+          <ArrowLeft size="24" />
+        </Button>
+        <Button
+          style={{ boxShadow: "2px 2px 4px #000000" }}
+          circle
+          onClick={() => setIsClicked(true, "right")}
+        >
+          <HeartIcon size="24" />
+        </Button>
+      </SwooferButtons>
 
-			<SwooferButtons
-				top="88"
-				style={{
-					backgroundColor: "#f4f4f4",
-					borderRadius: 10,
-					width: "30%",
-					margin: "0 35%",
-				}}
-			>
-				{/* Needs to be fixed 👇 */}
-				<Button
-					onClick={() => setIsClicked(true, "right")}
-					style={{ marginLeft: 50 }}
-					color="transparent"
-				>
-					<CornerDownLeft size="24" />
-				</Button>
-				<hr style={{ transform: "rotate(90dg)" }} />
-				<Button
-					onClick={() => setFilterModal(true)}
-					style={{ marginRight: 50 }}
-					color="transparent"
-				>
-					<Filter size="24" />
-				</Button>
-			</SwooferButtons>
+      <SwooferButtons
+        top="88"
+        style={{
+          backgroundColor: "#f4f4f4",
+          borderRadius: 10,
+          width: "30%",
+          margin: "0 35%",
+          boxShadow: "2px 2px 4px #000000",
+        }}
+      >
+        {/* Needs to be fixed 👇 */}
+        <Button
+          onClick={() => setIsClicked(true, "right")}
+          style={{ marginLeft: 50 }}
+          color="transparent"
+        >
+          <CornerDownLeft size="24" />
+        </Button>
+        <hr style={{ transform: "rotate(90dg)" }} />
+        <Button
+          onClick={() => setFilterModal(true)}
+          style={{ marginRight: 50 }}
+          color="transparent"
+        >
+          <Filter size="24" />
+        </Button>
+      </SwooferButtons>
 
-			<FilterModal
-				filter={filter}
-				setFilter={setFilter}
-				openModal={filterModal}
-				setOpenModal={setFilterModal}
-			/>
+      <FilterModal
+        filter={filter}
+        setFilter={setFilter}
+        openModal={filterModal}
+        setOpenModal={setFilterModal}
+      />
 
-			{topDog && (
-				<SwooferDrawer
-					dog={topDog}
-					drawerOpen={open}
-					setDrawerOpen={setOpen}
-					setIsClicked={setIsClicked}
-				/>
-			)}
-		</>
-	);
+      {topDog && (
+        <SwooferDrawer
+          dog={topDog}
+          drawerOpen={open}
+          setDrawerOpen={setOpen}
+          setIsClicked={setIsClicked}
+        />
+      )}
+    </>
+  );
 };
 
 export default Swoofer;

@@ -1,3 +1,5 @@
+import profileHead from "../images/profileHead.png";
+
 import styled from "styled-components";
 
 export const ProfileImg = styled.img`
@@ -5,21 +7,23 @@ export const ProfileImg = styled.img`
   border-radius: 50%;
   margin-inline: 100px;
   margin-top: 20px;
+  box-shadow: 2px 2px 4px #000000;
 `;
 
 export const ProfileHeader = styled.div`
   display: flex;
   align-items: flex-end;
-  background-color: #ffffff;
-  background-image: linear-gradient(
-    180deg,
-    rgb(233, 187, 187) 59%,
-    rgb(248, 137, 137) 100%
-  );
+  background-image: url(${profileHead});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right;
   color: #ffffff;
+  opacity: 0.8;
+  height: 30vh;
 `;
 
 export const ProfileHeaderData = styled.div`
   display: "flex";
-  flexdirection: "column";
+  flex-direction: "column";
+  text-shadow: 2px 2px 4px #000000;
 `;
