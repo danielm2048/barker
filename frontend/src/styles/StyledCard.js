@@ -95,6 +95,7 @@ export const CardButton = styled.button`
 
   &:hover svg {
     fill: var(--background);
+    color: var(--background);
   }
   &:first-child:nth-last-child(1),
   &:first-child:nth-last-child(1) ~ * {
