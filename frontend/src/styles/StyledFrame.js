@@ -30,40 +30,44 @@ export const CardInfo = styled.div`
   flex-direction: column;
   width: 90%;
   text-align: left;
-  margin-top: 80%;
+  margin-top: 90%;
 
   h1 {
     font-size: 26px;
-    margin: 3px 0;
+    margin: 0;
+    text-transform: capitalize;
   }
 
   h2 {
     font-size: 22px;
-    margin: 0 0 0 10px;
+    margin: 1.5px;
     font-weight: normal;
+    text-transform: capitalize;
   }
 
   h3 {
     font-size: 20px;
-    margin: 0 0 0 auto;
+    margin: 1.5px;
     font-weight: normal;
+    text-transform: capitalize;
   }
 
   span {
     text-transform: capitalize;
     font-size: 16px;
-    opacity: 0.8;
+    opacity: 0.6;
+    font-weight: normal;
+    margin-right: 20px;
   }
 
   p {
     display: -webkit-box;
     font-size: 16px;
     word-wrap: break-word;
-    /* text-overflow: ellipsis; */
     overflow: hidden;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
-    margin: 5px 0;
+    margin: 1.5px;
   }
 `;
 

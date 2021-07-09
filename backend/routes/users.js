@@ -10,6 +10,7 @@ const authorizeUser = require("../middleware/authMiddleware");
 const s3uploader = require("../utils/s3uploader");
 
 const User = require("../models/user.model");
+const Dog = require("../models/dog.model");
 const City = require("../models/city.model");
 const Saved = require("../models/saved.model");
 
@@ -152,6 +153,68 @@ router.get("/me", authorizeUser, async (req, res) => {
   });
 });
 
+router.get("/saved", authorizeUser, async (req, res) => {
+  const { userId } = req.user;
+
+  const savedDogIds = await Saved.find({ userId });
+
+  const savedDogs = await Promise.all(
+    savedDogIds.map(async (save) => {
+      const dog = await Dog.findById(save.dogId);
+      const savedBy = await Saved.find({ dogId: dog._id });
+      const contact = await User.findById(dog.contactId);
+      const city = await City.findById(dog.locationId);
+
+      return {
+        id: dog._id,
+        name: dog.name,
+        age: dog.age,
+        gender: dog.gender,
+        breed: dog.breed,
+        pics: dog.pictures,
+        info: dog.info,
+        city: city.name,
+        contact: {
+          id: contact._id,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          pic: contact.pic,
+          info: contact.info,
+          isOrg: contact.isOrganization,
+        },
+        savedBy: savedBy.length,
+      };
+    })
+  );
+
+  res.json(savedDogs);
+});
+
+router.post("/save-dog/:dogId", authorizeUser, async (req, res) => {
+  const { userId } = req.user;
+  const { dogId } = req.params;
+
+  const newSave = new Saved({ userId, dogId });
+
+  await newSave.save();
+
+  res.json("Dog has been saved successfully!");
+});
+
+router.delete("/unsave-dog/:id", authorizeUser, async (req, res) => {
+  const { userId } = req.user;
+  const { dogId } = req.params;
+
+  const save = await Saved.findOneAndDelete({ userId, dogId });
+
+  if (!save) {
+    return res.status(404).json("Saved dog was not found");
+  }
+
+  res.json("Dog has been unsaved successfully");
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -172,38 +235,6 @@ router.get("/:id", async (req, res) => {
     city: city.name,
     isOrganization: user.isOrganization,
   });
-});
-
-router.get("/saved", authorizeUser, async (req, res) => {
-  const { userId } = req.user;
-
-  const savedDogs = await Saved.find({ userId });
-
-  res.json(savedDogs);
-});
-
-router.post("/save-dog/:dogId", authorizeUser, async (req, res) => {
-  const { userId } = req.user;
-  const { dogId } = req.params;
-
-  const newSave = new Saved({ userId, dogId });
-
-  await newSave.save();
-
-  res.json("Dog has been saved successfully!");
-});
-
-router.delete("/unsave-dog", authorizeUser, async (req, res) => {
-  const { userId } = req.user;
-  const { dogId } = req.params;
-
-  const save = await Saved.findOneAndDelete({ userId, dogId });
-
-  if (!save) {
-    return res.status(404).json("Saved dog was not found");
-  }
-
-  res.json("Dog has been unsaved successfully");
 });
 
 module.exports = router;

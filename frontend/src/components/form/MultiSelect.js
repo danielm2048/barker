@@ -14,6 +14,7 @@ const MultiSelect = ({ data, values, setValues, label }) => {
       id={`multi-select-${label}`}
       options={data}
       value={values}
+      fullWidth={true}
       onChange={(_, newValues) => setValues(newValues)}
       disableCloseOnSelect
       getOptionLabel={(option) => option}
@@ -25,16 +26,17 @@ const MultiSelect = ({ data, values, setValues, label }) => {
             style={{ marginRight: 8 }}
             checked={selected}
           />
-          <span className="Mui">{option}</span>
+
+          <span className="Mui" style={{ textTransform: "capitalize" }}>
+            {option}
+          </span>
         </>
       )}
-      style={{ width: 500 }}
       renderInput={(params) => (
         <TextField
-          fullWidth={true}
           {...params}
           variant="outlined"
-          label="Checkboxes"
+          label="Breeds"
           placeholder={label}
         />
       )}

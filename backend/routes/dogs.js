@@ -85,6 +85,7 @@ router.get("/", authorizeUser, async (req, res) => {
   const result = await Promise.all(
     dogs.map(async (dog) => {
       const contact = await User.findById(dog.contactId);
+      // const savedBy = await Saved.find({ dogId: dog._id });
 
       return {
         id: dog._id,
@@ -104,6 +105,7 @@ router.get("/", authorizeUser, async (req, res) => {
           info: contact.info,
           isOrg: contact.isOrganization,
         },
+        // savedBy: savedBy.length,
       };
     })
   );
@@ -116,7 +118,7 @@ router.post("/add", authorizeUser, async (req, res) => {
   const { pic } = req.files;
   const { userId } = req.user;
 
-  if (!name || !breed || !age || !gender || !info || !pic) {
+  if (!name || !breed || !age || !info || !pic) {
     return res.status(401).json("Please enter all required fields");
   }
 
@@ -140,6 +142,7 @@ router.post("/add", authorizeUser, async (req, res) => {
     age,
     pictures: url,
     info,
+    gender,
     locationId,
     contactId: userId,
   });

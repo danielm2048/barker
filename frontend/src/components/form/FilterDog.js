@@ -65,10 +65,11 @@ const FilterDog = ({ filter, setFilter, setOpenModal }) => {
     <div
       style={{
         width: "60%",
-        justifyContent: "center",
         textAlign: "center",
         display: "flex",
         flexDirection: "column",
+        margin: "0 auto",
+        marginBottom: "50px",
       }}
     >
       <h1>Search Filters</h1>

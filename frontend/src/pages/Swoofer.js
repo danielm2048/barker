@@ -15,6 +15,7 @@ import {
   CornerDownLeft,
   Filter,
 } from "@styled-icons/feather";
+import { Badge } from "@styled-icons/zondicons/Badge";
 import { HeartIcon } from "../styles/StyledIcons";
 import { SwooferButtons } from "../styles/StyledLayout";
 import FilterModal from "../components/layout/FilterModal";
@@ -29,6 +30,7 @@ const Swoofer = () => {
   const [data, setData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(false);
+  const [lastDog, setLastDog] = useState([]);
   const setIsClicked = useChoiceStore((state) => state.setIsClicked);
   const { open, setOpen } = useDrawerStore();
   const [filterModal, setFilterModal] = useState(false);
@@ -63,6 +65,24 @@ const Swoofer = () => {
     }
   }, [topDogIndex, data]);
 
+  useEffect(() => {
+    async function fetch() {
+      if (topDogIndex === 0) {
+        setIsLoading(true);
+        if (filter) {
+          const { data } = await axios.get(`/api/dogs/${filter}`);
+          setData(data);
+        } else {
+          const { data } = await axios.get(`/api/dogs/`);
+          setData(data);
+        }
+        setTopDogIndex(null);
+        setIsLoading(false);
+      }
+    }
+    fetch();
+  }, [topDogIndex, filter]);
+
   if (isLoading || !data) {
     return <Loader />;
   }
@@ -71,9 +91,8 @@ const Swoofer = () => {
     <>
       <Wrapper
         onVote={(vote) => {
-          console.log(topDog);
-          console.log(data);
-          console.log(topDogIndex);
+          setLastDog((pervArray) => [topDogIndex, ...pervArray]);
+
           vote ? SaveDog(topDog) : console.log(vote);
         }}
         setTopDogIndex={setTopDogIndex}
@@ -81,26 +100,46 @@ const Swoofer = () => {
         {data.map((pet, i) => (
           <Item key={i} whileTap={{ scale: 1.15 }} pic={pet.pics[0]}>
             <CardInfo>
-              <div style={{ display: "flex", alignItems: "baseline" }}>
-                <h1>{pet.name} </h1>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                }}
+              >
+                <h1>
+                  <span>Name:</span>
+                  {pet.name}{" "}
+                  {pet.contact.isOrg ? <Badge size="26" color="#007eff" /> : ""}
+                </h1>
                 <h2>
+                  <span>Age: </span>
                   {pet.age >= 12
                     ? `${pet.age / 12} Years Old`
                     : `${pet.age} Months Old `}
                 </h2>
-                <h3>{pet.breed}</h3>
+                <h3>
+                  <span>Breed: </span>
+                  {pet.breed}
+                </h3>
               </div>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  height: 50,
+                  height: 30,
+                  marginTop: "3px",
                 }}
               >
                 <div>
-                  <span style={{ fontWeight: "bold" }}>{pet.city}</span>
-                  <p>{pet.gender ? "Female" : "Male"}</p>
+                  <p style={{ fontWeight: "bold" }}>
+                    <span>Location: </span>
+                    {pet.city}
+                  </p>
+                  <p>
+                    <span>Gender: </span> {pet.gender ? "Female" : "Male"}
+                  </p>
                 </div>
                 <Button
                   color="transparent"
@@ -143,14 +182,14 @@ const Swoofer = () => {
         style={{
           backgroundColor: "#f4f4f4",
           borderRadius: 10,
-          width: "30%",
-          margin: "0 35%",
+          width: "20%",
+          margin: "0 40%",
           boxShadow: "2px 2px 4px #000000",
         }}
       >
         {/* Needs to be fixed 👇 */}
         <Button
-          onClick={() => setIsClicked(true, "right")}
+          onClick={() => setTopDog(data[topDogIndex + 1])}
           style={{ marginLeft: 50 }}
           color="transparent"
         >
