@@ -9,6 +9,7 @@ import Routes from "./Routes";
 import Navbar from "./components/layout/Navbar";
 import Toast from "./components/layout/Toast";
 import Footer from "./components/layout/Footer";
+import SwooferDrawer from "./components/layout/SwooferDrawer";
 import Loader from "./components/Loader";
 
 import { Main, Canvas } from "./styles/StyledLayout";
@@ -37,6 +38,7 @@ function App() {
 				<Navbar />
 				<Routes />
 				<Toast />
+				<SwooferDrawer />
 				<Footer />
 			</Main>
 		</>

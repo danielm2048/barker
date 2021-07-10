@@ -27,5 +27,8 @@ export const useToastStore = create((set) => ({
 
 export const useDrawerStore = create((set) => ({
 	open: false,
+	dog: null,
+	isDogMine: false,
 	setOpen: (value) => set({ open: value }),
+	setDogAndOpen: (dog, isDogMine) => set({ open: true, dog, isDogMine }),
 }));
