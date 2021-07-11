@@ -31,7 +31,7 @@ const Saved = () => {
 				alignItems: "center",
 			}}
 		>
-			<h1>Saved Dogs</h1>
+			<h1>{!data.length ? "No saved dogs!" : "Saved Dogs"}</h1>
 			{data.map((dog, i) => (
 				<DogCard
 					key={i}
