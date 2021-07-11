@@ -38,8 +38,7 @@ export const ProfileBody = styled.div`
 	width: 100%;
 `;
 export const ProfileAbout = styled.div`
-	width: 25%;
-	height: 30vh;
+	width: 28%;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	border-radius: 15px;
 	background-color: rgb(176 176 179 / 26%);
