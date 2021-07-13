@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 import { useChoiceStore, useDrawerStore } from "../store";
@@ -16,7 +16,7 @@ import {
 	Filter,
 } from "@styled-icons/feather";
 import { Badge } from "@styled-icons/zondicons/Badge";
-import { HeartIcon } from "../styles/StyledIcons";
+import { BoneIcon } from "../styles/StyledIcons";
 import { SwooferButtons } from "../styles/StyledLayout";
 import FilterModal from "../components/layout/FilterModal";
 
@@ -33,6 +33,8 @@ const Swoofer = () => {
 	const [topDog, setTopDog] = useState(null);
 	const [topDogIndex, setTopDogIndex] = useState(null);
 	const [goBack, setGoBack] = useState(false);
+
+	const topDogRef = useRef(topDog);
 
 	useEffect(() => {
 		async function fetch() {
@@ -55,8 +57,10 @@ const Swoofer = () => {
 			if (topDogIndex === null) {
 				setTopDogIndex(data.length - 1);
 				setTopDog(data[data.length - 1]);
+				topDogRef.current = data[data.length - 1];
 			} else if (topDogIndex !== data.length - 1) {
 				setTopDog(data[topDogIndex]);
+				topDogRef.current = data[topDogIndex];
 			}
 		}
 	}, [topDogIndex, data]);
@@ -87,16 +91,12 @@ const Swoofer = () => {
 					vote ? mutate({ dogId: topDog.id }) : console.log(vote);
 				}}
 				setTopDogIndex={setTopDogIndex}
+				setDogs={setData}
 				goBack={goBack}
 				setGoBack={setGoBack}
 			>
 				{data.map((dog, i) => (
-					<Item
-						key={i}
-						whileTap={{ scale: 1.15 }}
-						pic={dog.pics[0]}
-						id={dog.id}
-					>
+					<Item key={i} whileTap={{ scale: 1.15 }} pic={dog.pics[0]} dog={dog}>
 						<CardInfo>
 							<div
 								style={{
@@ -127,7 +127,7 @@ const Swoofer = () => {
 
 									<Button
 										color="transparent"
-										onClick={() => setDogAndOpen(topDog, false)}
+										onClick={() => setDogAndOpen(topDogRef.current, false)}
 										style={{ width: 60, height: 60 }}
 									>
 										<MoreVertical
@@ -176,7 +176,7 @@ const Swoofer = () => {
 					circle
 					onClick={() => setIsClicked(true, "right")}
 				>
-					<HeartIcon size="24" />
+					<BoneIcon size="30" />
 				</Button>
 			</SwooferButtons>
 

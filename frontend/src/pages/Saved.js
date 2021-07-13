@@ -4,6 +4,7 @@ import Loader from "../components/Loader";
 import useSaved from "../hooks/useSaved";
 // import useSaveDog from "../hooks/useSaved";
 import useUnsaveDog from "../hooks/useUnsaveDog";
+import useAddConversation from "../hooks/chat/useAddConversation";
 
 import { useDrawerStore } from "../store";
 
@@ -11,6 +12,7 @@ const Saved = () => {
 	const { data, isLoading, isError } = useSaved();
 	// const { mutate: saveDog } = useSaveDog();
 	const { mutate: unsaveDog } = useUnsaveDog();
+	const { mutate: addConversation } = useAddConversation();
 
 	const setDogAndOpen = useDrawerStore((state) => state.setDogAndOpen);
 
@@ -36,6 +38,7 @@ const Saved = () => {
 				<DogCard
 					key={i}
 					dog={dog}
+					messageOwner={addConversation}
 					unsaveDog={unsaveDog}
 					setDogAndOpen={setDogAndOpen}
 					isDogMine={false}

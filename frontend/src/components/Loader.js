@@ -1,6 +1,6 @@
-const Loader = () => {
+const Loader = ({ loaderClass }) => {
 	return (
-		<div className="lds-default">
+		<div className={`lds-default ${loaderClass}`}>
 			<div></div>
 			<div></div>
 			<div></div>

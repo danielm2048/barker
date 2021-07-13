@@ -5,6 +5,14 @@ const Conversation = require("../models/conversation.model");
 router.post("/", async (req, res) => {
 	const { senderId, receiverId } = req.body;
 
+	const conversation = await Conversation.findOne({
+		members: [senderId, receiverId],
+	});
+
+	if (conversation) {
+		return res.status(400).json("Conversation already exists");
+	}
+
 	const newConversation = new Conversation({ members: [senderId, receiverId] });
 
 	try {

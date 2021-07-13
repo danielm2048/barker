@@ -15,7 +15,7 @@ export default function useLogin() {
 		{
 			onSuccess: (data) => {
 				setAccessToken(data.accessToken);
-				queryClient.setQueryData("auth", data.user);
+				queryClient.invalidateQueries("auth");
 			},
 		}
 	);

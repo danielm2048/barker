@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Drawer, DrawerContent, LinkButton } from "../../styles/StyledDrawer";
 import Button from "../../styles/StyledButton";
 import { Close } from "../../styles/StyledModal";
-import { HeartIcon } from "../../styles/StyledIcons";
+import { BoneIcon } from "../../styles/StyledIcons";
 import { Award, AtSign, Phone, User, Users, X } from "@styled-icons/feather";
 
 import Slideshow from "../Slideshow";
@@ -124,7 +124,7 @@ const SwooferDrawer = () => {
 										}, 100);
 									}}
 								>
-									<HeartIcon size="24" />
+									<BoneIcon size="24" />
 								</Button>
 
 								<LinkButton

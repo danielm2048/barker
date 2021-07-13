@@ -10,6 +10,7 @@ const Stack = ({
 	children,
 	onVote,
 	setTopDogIndex,
+	setDogs,
 	goBack,
 	setGoBack,
 	...props
@@ -51,13 +52,17 @@ const Stack = ({
 			setStack(newStack);
 
 			if (lastCard.vote) {
-				unsaveDog({ dogId: lastCard.card.props.id });
+				unsaveDog({ dogId: lastCard.card.props.dog.id });
 			}
+
+			setDogs((prevState) => [...prevState, lastCard.card.props.dog]);
+
+			setTopDogIndex((prev) => prev + 1);
 
 			setGoBack(false);
 			setLastCard(null);
 		}
-	}, [stack, lastCard, setGoBack, unsaveDog]);
+	}, [stack, lastCard, setGoBack, unsaveDog, setTopDogIndex, setDogs]);
 
 	useEffect(() => {
 		if (goBack) {

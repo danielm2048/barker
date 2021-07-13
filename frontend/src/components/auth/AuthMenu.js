@@ -7,12 +7,7 @@ import {
 	MenuItem,
 	MenuLink,
 } from "../../styles/StyledMenu";
-import {
-	MenuIcon,
-	UserIcon,
-	HeartIcon,
-	ChatIcon,
-} from "../../styles/StyledIcons";
+import { MenuIcon, UserIcon, ChatIcon } from "../../styles/StyledIcons";
 import { Plus } from "@styled-icons/feather";
 
 const AuthMenu = ({ authMenuOpen, setAuthMenuOpen, userId }) => {
@@ -48,11 +43,6 @@ const AuthMenu = ({ authMenuOpen, setAuthMenuOpen, userId }) => {
 					<MenuItem>
 						<MenuLink to={`/profile/${userId}`}>
 							<UserIcon size="24" title="Profile" /> My Profile
-						</MenuLink>
-					</MenuItem>
-					<MenuItem>
-						<MenuLink to="/saved">
-							<HeartIcon size="24" title="Saved" /> Saved Dogs
 						</MenuLink>
 					</MenuItem>
 					<MenuItem>

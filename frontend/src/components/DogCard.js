@@ -44,7 +44,7 @@ const DogCard = ({ dog, isDogMine, unsaveDog, editDog, messageOwner }) => {
 					</CardButton>
 				)}
 				{messageOwner && (
-					<CardButton>
+					<CardButton onClick={() => messageOwner({})}>
 						<MessageCircle size="20" />
 					</CardButton>
 				)}
