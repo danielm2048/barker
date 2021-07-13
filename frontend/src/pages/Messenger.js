@@ -23,7 +23,6 @@ import {
 	ChatBoxBottom,
 	ChatMessageInput,
 	ChatSubmitButton,
-	NoConversationText,
 } from "../styles/StyledMessenger";
 
 export default function Messenger() {
@@ -96,16 +95,18 @@ export default function Messenger() {
 			<ChatMenu>
 				<ChatMenuWrapper>
 					<ChatMenuInput placeholder="Search..." />
+					<hr />
 					{conversations?.map((c, i) => (
 						<div key={i} onClick={() => setCurrentChat(c)}>
 							<Conversation conversation={c} currentUser={user} />
+							<hr />
 						</div>
 					))}
 				</ChatMenuWrapper>
 			</ChatMenu>
 			<ChatBox>
 				<ChatBoxWrapper>
-					{currentChat ? (
+					{currentChat && (
 						<>
 							<ChatBoxTop>
 								{messages?.map((m, i) => (
@@ -126,10 +127,6 @@ export default function Messenger() {
 								</ChatSubmitButton>
 							</ChatBoxBottom>
 						</>
-					) : (
-						<NoConversationText>
-							Open a conversation to start a chat.
-						</NoConversationText>
 					)}
 				</ChatBoxWrapper>
 			</ChatBox>

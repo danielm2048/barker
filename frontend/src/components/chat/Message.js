@@ -11,9 +11,11 @@ const Message = ({ message, own }) => {
 	return (
 		<StyledMessage own={own}>
 			<MessageTop>
-				<MessageText own={own}>{message.text}</MessageText>
+				<MessageText own={own}>
+					{message.text}{" "}
+					<MessageBottom>{format(message.createdAt)}</MessageBottom>
+				</MessageText>
 			</MessageTop>
-			<MessageBottom>{format(message.createdAt)}</MessageBottom>
 		</StyledMessage>
 	);
 };
