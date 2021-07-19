@@ -88,7 +88,7 @@ function Profile() {
                   key={i}
                   dog={dog}
                   isDogMine={id === userData.id}
-                  editDog={true}
+                  editDog={id === userData.id}
                 />
               ))}
             </AccordionDetails>
